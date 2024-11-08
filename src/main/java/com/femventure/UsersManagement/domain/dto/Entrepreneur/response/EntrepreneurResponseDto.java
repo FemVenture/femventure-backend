@@ -1,4 +1,4 @@
-package com.femventure.UsersManagement.domain.dto.Entrepeneur.response;
+package com.femventure.UsersManagement.domain.dto.Entrepreneur.response;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

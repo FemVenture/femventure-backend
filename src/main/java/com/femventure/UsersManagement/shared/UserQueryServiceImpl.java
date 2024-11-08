@@ -13,7 +13,7 @@ class UserQueryServiceImpl implements UserQueryService {
     }
 
     @Override
-    public UserResponseDto createUser(Long mentorId, String email, String password) {
-        return userService.createUser(mentorId, email, password);
+    public UserResponseDto createUser(String email, String password) {
+        return userService.createUser(email, password);
     }
 }

@@ -7,5 +7,5 @@ public interface IUserService {
     public abstract UserResponseDto getUserForLogin(String email, String password);
 
     //POST
-    public abstract UserResponseDto createUser(Long mentorId, String email, String password);
+    public abstract UserResponseDto createUser(String email, String password);
 }

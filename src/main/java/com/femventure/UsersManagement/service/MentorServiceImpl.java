@@ -55,7 +55,7 @@ public class MentorServiceImpl implements IMentorService {
 
     @Override
     public MentorResponseDto createUserByMentorId(Long mentorId, String email, String password) {
-        var user = userQueryService.createUser(mentorId, email, password);
+        var user = userQueryService.createUser(email, password);
         return updateMentorByUserId(mentorId, user.getId());
     }
 

@@ -28,8 +28,10 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public UserResponseDto createUser(Long mentorId, String email, String password) {
-        var user = new User(mentorId, email, password);
+    public UserResponseDto createUser(String email, String password) {
+        var user = new User();
+        user.setEmail(email);
+        user.setPassword(password);
         var createdUser = userRepository.save(user);
         return modelMapper.map(createdUser, UserResponseDto.class);
     }
