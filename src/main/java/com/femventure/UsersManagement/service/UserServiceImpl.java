@@ -2,6 +2,7 @@ package com.femventure.UsersManagement.service;
 
 import com.femventure.Shared.exception.ResourceNotFoundException;
 import com.femventure.UsersManagement.domain.dto.User.response.UserResponseDto;
+import com.femventure.UsersManagement.domain.entity.User;
 import com.femventure.UsersManagement.domain.interfaces.repository.IUserRepository;
 import com.femventure.UsersManagement.domain.interfaces.service.IUserService;
 import org.modelmapper.ModelMapper;
@@ -24,6 +25,13 @@ public class UserServiceImpl implements IUserService {
         );
 
         return modelMapper.map(user, UserResponseDto.class);
+    }
+
+    @Override
+    public UserResponseDto createUser(Long mentorId, String email, String password) {
+        var user = new User(mentorId, email, password);
+        var createdUser = userRepository.save(user);
+        return modelMapper.map(createdUser, UserResponseDto.class);
     }
 }
 
