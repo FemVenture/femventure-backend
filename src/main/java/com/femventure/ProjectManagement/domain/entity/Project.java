@@ -27,6 +27,7 @@ public class Project {
     private BigDecimal fundsRaised;
     private String status;
     private String tag;
+    private Long creatorId;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ProjectPicture> pictures;
@@ -34,3 +35,4 @@ public class Project {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Milestone> milestones;
 }
+
