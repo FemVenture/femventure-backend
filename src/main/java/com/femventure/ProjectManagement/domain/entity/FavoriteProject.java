@@ -1,5 +1,6 @@
 package com.femventure.ProjectManagement.domain.entity;
 
+import com.femventure.UsersManagement.domain.entity.Entrepreneur;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,11 +15,19 @@ public class FavoriteProject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "entrepreneur_id", nullable = false)
+    private Long entrepreneurId;
 
-    @ManyToOne
-    @JoinColumn(name = "project_id", nullable = false)
-    private Project project;
+    @Column(name = "project_id", nullable = false)
+    private Long projectId;
+
 
     private boolean isFavorite;
+
+    public FavoriteProject(Long entrepreneurId, Long projectId, boolean isFavorite) {
+        this.entrepreneurId = entrepreneurId;
+        this.projectId = projectId;
+        this.isFavorite = isFavorite;
+    }
 
 }

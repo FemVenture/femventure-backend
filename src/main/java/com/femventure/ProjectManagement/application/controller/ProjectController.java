@@ -23,12 +23,20 @@ public class ProjectController {
         this.projectService = projectService;
     }
 
-    @Operation(summary = "Create a new project")
-    @PostMapping("/")
-    public ResponseEntity<ProjectResponseDto> createProject(@RequestBody ProjectRequestDto projectRequestDto) {
-        ProjectResponseDto response = projectService.createProject(projectRequestDto);
+    @PostMapping("/entrepreneurs/{entrepreneurId}/projects")
+    public ResponseEntity<ProjectResponseDto> createProject(@PathVariable Long entrepreneurId,
+                                                            @RequestBody ProjectRequestDto projectRequestDto) {
+        ProjectResponseDto response = projectService.createProject(entrepreneurId, projectRequestDto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
+    @Operation(summary = "Get all projects")
+    @GetMapping
+    public ResponseEntity<List<ProjectResponseDto>> getAllProjects() {
+        List<ProjectResponseDto> response = projectService.getAllProjects();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 
     @Operation(summary = "Get a project by ID")
     @GetMapping("/{projectId}")
@@ -37,10 +45,10 @@ public class ProjectController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @Operation(summary = "Get all projects by a specific creator ID")
-    @GetMapping("/creator/{creatorId}")
-    public ResponseEntity<List<ProjectResponseDto>> getProjectsByCreator(@PathVariable Long creatorId) {
-        List<ProjectResponseDto> response = projectService.getProjectsByCreator(creatorId);
+    @Operation(summary = "Get all projects by a specific entrepreneur ID")
+    @GetMapping("/entrepreneur/{entrepreneurId}")
+    public ResponseEntity<List<ProjectResponseDto>> getProjectsByEntrepreneur(@PathVariable Long entrepreneurId) {
+        List<ProjectResponseDto> response = projectService.getProjectsByEntrepreneurId(entrepreneurId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

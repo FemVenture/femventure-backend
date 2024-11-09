@@ -6,8 +6,10 @@ import com.femventure.ProjectManagement.domain.dto.Project.response.FavoriteProj
 import java.util.List;
 
 public interface IFavoriteProjectService {
-    FavoriteProjectResponseDto markAsFavorite(FavoriteProjectRequestDto requestDto); // Marcar un proyecto como favorito
-    FavoriteProjectResponseDto unmarkAsFavorite(Long entrepreneurId, Long projectId); // Quitar un proyecto de favoritos
-    List<FavoriteProjectResponseDto> getFavoritesByEntrepreneur(Long entrepreneurId); // Obtener todos los proyectos favoritos de un emprendedor
 
+    FavoriteProjectResponseDto markProjectAsFavorite(Long projectId, Long entrepreneurId);
+
+    void unmarkProjectAsFavorite(Long projectId, Long entrepreneurId);
+
+    List<FavoriteProjectResponseDto> getFavoriteProjectsByEntrepreneur(Long entrepreneurId);
 }

@@ -1,13 +1,11 @@
 package com.femventure.ProjectManagement.domain.entity;
 
-
+import com.femventure.ProjectManagement.domain.dto.Project.request.ProjectRequestDto;
+import com.femventure.UsersManagement.domain.entity.Entrepreneur;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
-
 @Data
 @Builder
 @NoArgsConstructor
@@ -23,16 +21,41 @@ public class Project {
     private String description;
     private LocalDate startDate;
     private LocalDate endDate;
-    private BigDecimal totalFundingGoal;
-    private BigDecimal fundsRaised;
-    private String status;
+    private double totalFundingGoal = 0.0;
+    private double fundsRaised = 0.0;
     private String tag;
-    private Long creatorId;
+    private String text;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<ProjectPicture> pictures;
+    @Column(name = "entrepreneur_id", nullable = false)
+    private Long entrepreneurId;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Milestone> milestones;
+    private int totalMilestones;
+
+
+    public Project(ProjectRequestDto projectRequestDto, Long entrepreneurId) {
+        this.title = projectRequestDto.getTitle();
+        this.description = projectRequestDto.getDescription();
+        this.startDate = projectRequestDto.getStartDate();
+        this.endDate = projectRequestDto.getEndDate();
+        this.tag = projectRequestDto.getTag();
+        this.entrepreneurId = entrepreneurId;
+        this.text = projectRequestDto.getText();
+        this.totalMilestones = projectRequestDto.getTotalMilestones();
+    }
+
+
+    public void update(ProjectRequestDto projectRequestDto) {
+        this.title = projectRequestDto.getTitle();
+        this.description = projectRequestDto.getDescription();
+        this.startDate = projectRequestDto.getStartDate();
+        this.endDate = projectRequestDto.getEndDate();
+        this.tag = projectRequestDto.getTag();
+        this.text = projectRequestDto.getText();
+        this.totalMilestones = projectRequestDto.getTotalMilestones();
+    }
+
+
+
+
+
 }
-
