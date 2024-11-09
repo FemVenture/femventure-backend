@@ -10,6 +10,7 @@ import com.femventure.ProjectManagement.domain.entity.Project;
 import com.femventure.ProjectManagement.domain.interfaces.repository.IMilestoneRepository;
 import com.femventure.ProjectManagement.domain.interfaces.repository.IProjectRepository;
 import com.femventure.ProjectManagement.domain.interfaces.service.IProjectService;
+import com.femventure.ProjectManagement.shared.MilestoneStatus;
 import com.femventure.UsersManagement.application.validation.MentorValidation;
 import com.femventure.UsersManagement.domain.entity.Entrepreneur;
 import com.femventure.UsersManagement.domain.interfaces.repository.IEntrepreneurRepository;
@@ -41,14 +42,29 @@ public class ProjectServiceImpl implements IProjectService {
 
         ProjectValidation.validateProject(projectRequestDto);
 
-       entrepreneurRepository.findById(entrepreneurId)
+        entrepreneurRepository.findById(entrepreneurId)
                 .orElseThrow(() -> new RuntimeException("Entrepreneur not found"));
 
+        // Crear y guardar el proyecto para obtener su ID
         var project = new Project(projectRequestDto, entrepreneurId);
         var savedProject = projectRepository.save(project);
-        //updateProjectFundingStats(savedProject.getId());
-        return modelMapper.map(savedProject, ProjectResponseDto.class);
+
+        // Ahora que el proyecto tiene un ID, creamos el milestone
+        var milestone = new Milestone();
+        milestone.setProjectId(savedProject.getId());
+        milestone.setStatus(MilestoneStatus.PENDING);
+        milestone.setTitle("Esperando aprobación");
+
+        // Guardar el milestone
+        var savedMilestone = milestoneRepository.save(milestone);
+
+        // Asociar el milestone al proyecto y actualizar
+        savedProject.setCurrentMilestoneId(savedMilestone.getId());
+        var updatedProject = projectRepository.save(savedProject);
+
+        return modelMapper.map(updatedProject, ProjectResponseDto.class);
     }
+
 
     public void updateProjectFundingStats(Long projectId) {
         Project project = projectRepository.findById(projectId)

@@ -35,36 +35,46 @@ public class MilestoneServicesImpl implements IMilestoneService {
 
     @Override
     public MilestoneResponseDto createMilestone(Long projectId, MilestoneRequestDto milestoneRequestDto) {
-       var project = projectRepository.findById(projectId)
+        var project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
 
         long currentMilestonesCount = milestoneRepository.countByProjectId(projectId);
+
         if (currentMilestonesCount >= project.getTotalMilestones()) {
             throw new RuntimeException("Cannot create more milestones than the specified total.");
         }
 
-        int totalMilestones = project.getTotalMilestones();
+        var milestoneCurrent = milestoneRepository.findById(project.getCurrentMilestoneId())
+                .orElseThrow(() -> new RuntimeException("Milestone not found, current milestone id: " + project.getCurrentMilestoneId()));
 
-        Milestone lastMilestone = milestoneRepository.findTopByProjectIdOrderByIdDesc(projectId);
-        if (lastMilestone != null && (lastMilestone.getStatus() != MilestoneStatus.COMPLETED || lastMilestone.getStatus()!=MilestoneStatus.APPROVED) && currentMilestonesCount != 0) {
-            throw new IllegalStateException("No se puede crear un nuevo hito porque el último hito no está completado o aprobado");
+        if ((milestoneCurrent.getStatus() != MilestoneStatus.COMPLETED && milestoneCurrent.getStatus() != MilestoneStatus.APPROVED)
+                && currentMilestonesCount != 0) {
+            throw new IllegalStateException("No se puede crear un nuevo hito porque el último hito no está completado o aprobado, milestone id current "
+                    + project.getCurrentMilestoneId() + " status " + milestoneCurrent.getStatus());
         }
 
+        // Crear y guardar el nuevo hito
         var milestone = new Milestone(milestoneRequestDto, projectId);
-        milestone.setFundingGoal(project.getTotalFundingGoal()/totalMilestones);
-        if(currentMilestonesCount == 0) {
+        int totalMilestones = project.getTotalMilestones();
+        milestone.setFundingGoal(project.getTotalFundingGoal() / totalMilestones);
+
+        if (currentMilestonesCount == 0) {
             milestone.setStatus(MilestoneStatus.PENDING);
-            milestone.setStartDate(LocalDate.now());
-        }
-        else {
+        } else {
             milestone.setStatus(MilestoneStatus.IN_PROGRESS);
             milestone.setStartDate(LocalDate.now());
         }
 
-        milestoneRepository.save(milestone);
+        // Guardar el milestone para generar su ID
+        var savedMilestone = milestoneRepository.save(milestone);
 
-        return  modelMapper.map(milestone, MilestoneResponseDto.class);
+        // Asignar el currentMilestoneId después de que el milestone tenga un ID
+        project.setCurrentMilestoneId(savedMilestone.getId());
+        projectRepository.save(project);
+
+        return modelMapper.map(savedMilestone, MilestoneResponseDto.class);
     }
+
 
     @Override
     public MilestoneResponseDto getMilestoneById(Long milestoneId) {
@@ -91,7 +101,7 @@ public class MilestoneServicesImpl implements IMilestoneService {
         milestone.update(milestoneRequestDto);
 
          milestoneRepository.save(milestone);
-        projectService.updateProjectFundingStats(milestone.getProjectId());
+        //projectService.updateProjectFundingStats(milestone.getProjectId());
         return modelMapper.map(milestone, MilestoneResponseDto.class);
     }
 
@@ -101,7 +111,7 @@ public class MilestoneServicesImpl implements IMilestoneService {
                 .orElseThrow(() -> new RuntimeException("Milestone not found"));
 
         milestoneRepository.delete(milestone);
-        projectService.updateProjectFundingStats(milestone.getProjectId());
+       // projectService.updateProjectFundingStats(milestone.getProjectId());
     }
 
     @Override
@@ -109,21 +119,19 @@ public class MilestoneServicesImpl implements IMilestoneService {
         Milestone milestone = milestoneRepository.findById(milestoneId)
                 .orElseThrow(() -> new RuntimeException("Milestone not found"));
 
-        if (milestone.getStatus().equals("CASH OUT") || milestone.getStatus().equals("APPROVED")) {
+        if (milestone.getStatus() == MilestoneStatus.CASH_OUT  || milestone.getStatus() == MilestoneStatus.APPROVED) {
             throw new IllegalStateException("Milestone already cashed out or it is approved, so it cannot be updated.");
         }
-
         if (milestone.getStatus() == MilestoneStatus.PENDING) {
             milestone.setStatus(MilestoneStatus.APPROVED);
+            milestone.setStartDate(LocalDate.now());
         }
-        // Si el hito está en estado IN_PROGRESS y ha alcanzado el funding goal con un 5% extra
         else if (milestone.getStatus() == MilestoneStatus.IN_PROGRESS
                 && milestone.getFundingGoal() <= (milestone.getFundsRaised() + milestone.getFundsRaised() * 0.05)) {
             milestone.setStatus(MilestoneStatus.COMPLETED);
             milestone.setBusinessCommision(milestone.getFundingGoal() * 0.05);
             milestone.setEndDate(LocalDate.now());
         }
-        // Si el hito está en estado APPROVED, cambiar a CASH_OUT
         else if (milestone.getStatus() == MilestoneStatus.APPROVED) {
             milestone.setStatus(MilestoneStatus.CASH_OUT);
             milestone.setCashedOutDate(LocalDate.now());

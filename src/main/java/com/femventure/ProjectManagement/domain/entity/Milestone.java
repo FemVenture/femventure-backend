@@ -34,7 +34,6 @@ public class Milestone {
     private double fundsRaised;
     private double businessCommision;
 
-
     @Column(name = "project_id", nullable = false)
     private Long projectId;
 
