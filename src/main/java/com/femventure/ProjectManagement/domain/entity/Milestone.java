@@ -55,8 +55,4 @@ public class Milestone {
         this.description = requestDto.getDescription();
         this.evidence = requestDto.getEvidence();
     }
-
-    public void setFundsRaised(double amount) {
-        this.fundsRaised += amount;
-    }
 }
