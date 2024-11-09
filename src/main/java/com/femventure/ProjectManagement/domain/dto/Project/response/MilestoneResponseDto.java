@@ -1,5 +1,6 @@
 package com.femventure.ProjectManagement.domain.dto.Project.response;
 
+import com.femventure.ProjectManagement.domain.entity.Milestone;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,9 @@ public class MilestoneResponseDto {
     private String description;
     private LocalDate startDate;
     private LocalDate endDate;
-    private BigDecimal fundingGoal;
-    private BigDecimal fundsRaised;
+    private double fundingGoal;
+    private double fundsRaised;
     private String status;
+
+
 }

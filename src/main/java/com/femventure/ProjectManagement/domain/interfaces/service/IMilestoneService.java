@@ -6,8 +6,9 @@ import com.femventure.ProjectManagement.domain.dto.Project.response.MilestoneRes
 import java.util.List;
 
 public interface IMilestoneService {
-    MilestoneResponseDto createMilestone(Long projectId, MilestoneRequestDto requestDto);
-     MilestoneResponseDto updateMilestone(Long milestoneId, MilestoneRequestDto requestDto); // Actualizar un hito
-    void deleteMilestone(Long milestoneId); // Eliminar un hito
-
+    MilestoneResponseDto createMilestone(Long projectId, MilestoneRequestDto milestoneRequestDto);
+    MilestoneResponseDto getMilestoneById(Long milestoneId);
+    List<MilestoneResponseDto> getMilestonesByProjectId(Long projectId);
+    MilestoneResponseDto updateMilestone(Long milestoneId, MilestoneRequestDto milestoneRequestDto);
+    void deleteMilestone(Long milestoneId);
 }

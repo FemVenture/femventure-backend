@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface IFavoriteProjectRepository extends JpaRepository<FavoriteProject, Long> {
-    //Optional<FavoriteProject> findByEntrepreneurIdAndProjectId(Long entrepreneurId, Long projectId);
-   // List<FavoriteProject> findByEntrepreneurId(Long entrepreneurId);
+    Optional<FavoriteProject> findByEntrepreneurIdAndProjectId(Long entrepreneurId, Long projectId);
+    List<FavoriteProject> findByEntrepreneurId(Long entrepreneurId);
 
 }

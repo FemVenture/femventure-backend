@@ -8,6 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProjectPictureRequestDto {
-    private Long projectId;
     private String imageUrl;
 }
