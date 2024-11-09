@@ -16,7 +16,14 @@ public class ProjectPicture {
 
     private String imageUrl;
 
-    @ManyToOne
-    @JoinColumn(name = "project_id", nullable = false)
-    private Project project;
+    @Column(name = "project_id", nullable = false)
+    private Long projectId;
+
+    public ProjectPicture(String imageUrl, Long projectId) {
+        this.imageUrl = imageUrl;
+        this.projectId = projectId;
+    }
+
+
+
 }
