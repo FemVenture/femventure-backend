@@ -1,6 +1,8 @@
 package com.femventure.ProjectManagement.service;
 
+import com.femventure.ProjectManagement.application.validation.ProjectValidation;
 import com.femventure.ProjectManagement.domain.dto.Project.request.ProjectRequestDto;
+import com.femventure.ProjectManagement.domain.dto.Project.request.ProjectUpdateRequestDto;
 import com.femventure.ProjectManagement.domain.dto.Project.response.MilestoneResponseDto;
 import com.femventure.ProjectManagement.domain.dto.Project.response.ProjectResponseDto;
 import com.femventure.ProjectManagement.domain.entity.Milestone;
@@ -8,6 +10,7 @@ import com.femventure.ProjectManagement.domain.entity.Project;
 import com.femventure.ProjectManagement.domain.interfaces.repository.IMilestoneRepository;
 import com.femventure.ProjectManagement.domain.interfaces.repository.IProjectRepository;
 import com.femventure.ProjectManagement.domain.interfaces.service.IProjectService;
+import com.femventure.UsersManagement.application.validation.MentorValidation;
 import com.femventure.UsersManagement.domain.entity.Entrepreneur;
 import com.femventure.UsersManagement.domain.interfaces.repository.IEntrepreneurRepository;
 import org.modelmapper.ModelMapper;
@@ -35,12 +38,15 @@ public class ProjectServiceImpl implements IProjectService {
 
     @Override
     public ProjectResponseDto createProject(Long entrepreneurId, ProjectRequestDto projectRequestDto) {
+
+        ProjectValidation.validateProject(projectRequestDto);
+
        entrepreneurRepository.findById(entrepreneurId)
                 .orElseThrow(() -> new RuntimeException("Entrepreneur not found"));
 
         var project = new Project(projectRequestDto, entrepreneurId);
         var savedProject = projectRepository.save(project);
-        updateProjectFundingStats(savedProject.getId());
+        //updateProjectFundingStats(savedProject.getId());
         return modelMapper.map(savedProject, ProjectResponseDto.class);
     }
 
@@ -96,7 +102,7 @@ public class ProjectServiceImpl implements IProjectService {
     }
 
     @Override
-    public ProjectResponseDto updateProject(Long projectId, ProjectRequestDto projectRequestDto) {
+    public ProjectResponseDto updateProject(Long projectId, ProjectUpdateRequestDto projectRequestDto) {
         var project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
 

@@ -11,4 +11,6 @@ public interface IMilestoneRepository extends JpaRepository<Milestone, Long> {
     List<Milestone> findByProjectId(Long projectId);
 
     long countByProjectId(Long projectId);
+
+    Milestone findTopByProjectIdOrderByIdDesc(Long projectId);
 }

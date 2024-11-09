@@ -1,6 +1,7 @@
 package com.femventure.ProjectManagement.domain.entity;
 
 import com.femventure.ProjectManagement.domain.dto.Project.request.MilestoneRequestDto;
+import com.femventure.ProjectManagement.shared.MilestoneStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,49 +22,42 @@ public class Milestone {
     private String title;
     private String description;
     private String evidence;
-    private String status;
+
+    @Enumerated(EnumType.STRING)
+    private MilestoneStatus status;
 
     private LocalDate startDate;
-    private LocalDate completionDate;
+    private LocalDate cashedOutDate;
     private LocalDate endDate;
 
     private double fundingGoal;
     private double fundsRaised;
+    private double businessCommision;
 
 
     @Column(name = "project_id", nullable = false)
     private Long projectId;
 
 
-
     public Milestone(MilestoneRequestDto requestDto, Long projectId) {
         this.title = requestDto.getTitle();
         this.description = requestDto.getDescription();
-        this.status = requestDto.getStatus();
         this.evidence = requestDto.getEvidence();
-
-        this.startDate = requestDto.getStartDate();
-        this.endDate = requestDto.getEndDate();
-        this.completionDate = requestDto.getCompletionDate() ;
-
-        this.fundingGoal = requestDto.getFundingGoal();
         this.projectId = projectId;
-        this.fundsRaised =requestDto.getFundsRaised();
+        this.status = MilestoneStatus.PENDING;
+        this.fundsRaised = 0.0;
+        this.businessCommision = 0.0;
+        this.fundsRaised = 0.0;
+        this.businessCommision = 0.0;
     }
 
     public void update(MilestoneRequestDto requestDto) {
         this.title = requestDto.getTitle();
         this.description = requestDto.getDescription();
-        this.status = requestDto.getStatus();
         this.evidence = requestDto.getEvidence();
-
-        this.startDate = requestDto.getStartDate();
-        this.endDate = requestDto.getEndDate();
-        this.completionDate = requestDto.getCompletionDate() ;
-
-        this.fundingGoal = requestDto.getFundingGoal();
-        this.fundsRaised =requestDto.getFundsRaised();
     }
 
-
+    public void setFundsRaised(double amount) {
+        this.fundsRaised += amount;
+    }
 }

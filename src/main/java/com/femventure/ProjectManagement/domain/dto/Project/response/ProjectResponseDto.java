@@ -25,6 +25,5 @@ public class ProjectResponseDto {
     private String tag;
     private Long entrepreneurId;
     private int totalMilestones;
-
-
+    private Long currentMilestoneId;
 }

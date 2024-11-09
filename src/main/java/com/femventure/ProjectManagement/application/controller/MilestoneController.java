@@ -59,4 +59,11 @@ public class MilestoneController {
         milestoneService.deleteMilestone(milestoneId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @Operation(summary = "Update a milestone status by ID")
+    @PatchMapping("/{milestoneId}/status")
+    public ResponseEntity<MilestoneResponseDto> updateMilestoneStatus(@PathVariable Long milestoneId) {
+        MilestoneResponseDto response = milestoneService.updateMilestoneStatus(milestoneId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

@@ -1,6 +1,7 @@
 package com.femventure.ProjectManagement.application.controller;
 
 import com.femventure.ProjectManagement.domain.dto.Project.request.ProjectRequestDto;
+import com.femventure.ProjectManagement.domain.dto.Project.request.ProjectUpdateRequestDto;
 import com.femventure.ProjectManagement.domain.dto.Project.response.ProjectResponseDto;
 import com.femventure.ProjectManagement.domain.interfaces.service.IProjectService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -55,7 +56,7 @@ public class ProjectController {
     @Operation(summary = "Update a project by ID")
     @PutMapping("/{projectId}")
     public ResponseEntity<ProjectResponseDto> updateProject(@PathVariable Long projectId,
-                                                            @RequestBody ProjectRequestDto projectRequestDto) {
+                                                            @RequestBody ProjectUpdateRequestDto projectRequestDto) {
         ProjectResponseDto response = projectService.updateProject(projectId, projectRequestDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
