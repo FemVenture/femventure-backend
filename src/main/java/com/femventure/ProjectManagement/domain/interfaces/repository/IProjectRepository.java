@@ -9,8 +9,5 @@ import java.util.List;
 
 @Repository
 public interface IProjectRepository extends JpaRepository<Project, Long> {
-    Project findByStatus(String status);
-    Project findByTitle(String title);
-
-    List<Project> findByCreatorId(Long creatorId);
+    List<Project> findByEntrepreneurId(Long entrepreneurId);
 }
