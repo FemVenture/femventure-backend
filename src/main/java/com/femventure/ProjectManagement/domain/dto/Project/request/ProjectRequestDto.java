@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -12,6 +13,11 @@ import java.math.BigDecimal;
 public class ProjectRequestDto {
     private String title;
     private String description;
-    private BigDecimal totalFundingGoal;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private String tag;
+    private String text;
+    private int totalMilestones;
+
+
 }
